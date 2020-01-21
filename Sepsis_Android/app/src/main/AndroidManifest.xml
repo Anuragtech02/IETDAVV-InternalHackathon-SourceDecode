@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sepsis.sepsis">
+
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.flash"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".signup"></activity>
+        <activity android:name=".HeartRate"></activity>
+        <activity android:name=".sofa"></activity>
+        <activity android:name=".patient_registration"></activity>
+        <activity android:name=".welcome"></activity>
+        <activity android:name=".quickCheckup"></activity>
+        <activity android:name=".sirs"></activity>
+        <activity android:name=".login"></activity>
+        <activity android:name=".cure"></activity>
+        <activity android:name=".prescription"></activity>
+        <activity android:name=".dashboard"></activity>
+        <activity android:name=".patient_login"></activity>
+        <activity android:name=".patient_regis" />
+        <activity android:name=".staff_login" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

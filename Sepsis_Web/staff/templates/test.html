@@ -1,0 +1,68 @@
+
+{% load i18n %}
+{% if msg %}
+<script>
+    alert('{{msg}}')
+</script>
+{% endif %}
+<style >
+    h1{text-align: center;
+    color: azure;
+    background-color: cornflowerblue;}
+    body{display: block;
+    margin: 30;}
+    .button {
+  background-color:#f44336;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+}
+</style>
+<body>
+    <h1 >SIRS</h1>
+<form method="POST" action=""> 
+    {% csrf_token %}
+    
+    <div>
+        {% trans "Age:" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.Age}}<hr/>
+    </div>
+    <br>
+    <div>
+   
+        {% trans "HR:" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.HR}}<hr/>
+    </div> 
+    <br>
+    <div>
+        {% trans "O2Sat:" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.O2Sat}}<hr/><br>
+        
+    </div> 
+    <br>
+    <div>
+        {% trans "Temp:" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.Temp}}<hr/>
+    </div>
+    <br> 
+    <div>
+        {% trans "SBP:" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.SBP}}<hr/>
+
+    </div> 
+    <br>
+    <div>
+        {% trans "DBP:" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.DBP}}<br><hr/></div>
+    </div> 
+    <br>
+    <div>
+        {% trans "Resp:" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.Resp}}
+        <hr/>
+    </div> 
+    get your report on msg 
+    enter mobile no. <input type="number" name="no"  placeholder="+91 97845****12" required>
+    
+<input class="button" type="submit" value="submit"/>
+</form>
+
+</body>
