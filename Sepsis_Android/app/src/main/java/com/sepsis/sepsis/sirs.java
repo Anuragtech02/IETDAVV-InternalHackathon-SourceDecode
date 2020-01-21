@@ -92,6 +92,7 @@ public class sirs extends AppCompatActivity {
                     dia_bp.setError("Dia BP can't be empty");
                 }
                 else{
+                    
                     float[][] floats= new float[1][8];
                     String sage=age.getText().toString();
                     String sresprate=age.getText().toString();
