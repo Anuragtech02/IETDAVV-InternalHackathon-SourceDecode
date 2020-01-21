@@ -1,13 +1,19 @@
 package com.sepsis.sepsis;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,7 +25,11 @@ public class signup extends AppCompatActivity {
     EditText name , password, username, empno,cnfpass;
     Button btn;
     DatabaseReference ref;
+    SessionManager session;
     staff_reis_model model;
+    ProgressBar progressBar;
+    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,40 +46,88 @@ public class signup extends AppCompatActivity {
         username= (EditText)findViewById(R.id.editText_uname);
         password= (EditText)findViewById(R.id.editText_pass);
         cnfpass= (EditText)findViewById(R.id.editText_confPass);
+
         btn=(Button)findViewById(R.id.signup_signup);
+        session = new SessionManager(getApplicationContext());
+
+        progressBar = findViewById(R.id.progressBar1);
+        progressBar.setVisibility(View.GONE);
 
         model= new staff_reis_model();
-
 
 
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(name.getText().toString().isEmpty())
-                    {
+                    if(isInternetAvailable()){
 
-                    }
-                    if(empno.getText().toString().isEmpty()){
+                        if(name.getText().toString().isEmpty())
+                        {
+                            name.setError("Name can't be empty !");
+                        }
+                        if(empno.getText().toString().isEmpty()){
+                            empno.setError("Employee Number can't be empty !");
+                        }
+                        if(username.getText().toString().isEmpty()){
+                            username.setError("Username can't be empty !");
+                        }
+                        if(password.getText().toString().isEmpty()){
+                            password.setError("Password can't be empty !");
+                        }
+                        if(cnfpass.getText().toString().isEmpty()){
+                            cnfpass.setError("Confirm password can't be empty !");
 
-                    }
-                    if(username.getText().toString().isEmpty()){
+                        }else{
 
-                    }
-                    if(password.getText().toString().isEmpty()){
+                            String email = username.getText().toString().trim();
+                            if(email.matches(emailPattern)){
 
+                                if(cnfpass.getText().toString().equals(password.getText().toString())){
+                                    if(password.getText().toString().length()>=8){
+                                        progressBar.setVisibility(View.VISIBLE);
+                                        staffdata();
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Intent i = new Intent(signup.this, dashboard.class);
+                                               // i.putExtra("message", username.getText().toString());
+                                                startActivity(i);
+                                                session.createLoginSession("SIH", username.getText().toString());
+                                                finish();
+                                            }
+                                        }, 2000);
+                                    }
+                                    else{
+                                        password.setError("Password must be at least 8 characters long !");
+                                    }
+
+                                }
+                                else{
+                                    if(cnfpass.getText().toString().isEmpty()){
+                                        cnfpass.setError("Please enter password again !");
+                                    }
+                                    else if(!(cnfpass.getText().toString().equals(password.getText().toString()))){
+                                        cnfpass.setError("Passwords do not match :(");
+                                    }
+                                }
+                            }else{
+                                username.setError("This doesn't look like a valid email address :(");
+                            }
+
+                        }
+                    }else{
+                        Toast.makeText(signup.this, "No Internet Connection :(", Toast.LENGTH_SHORT).show();
                     }
-                    if(cnfpass.getText().toString().isEmpty()){
-                        
-                    }
-                    if(cnfpass.getText().toString().equals(password.getText().toString())){
-                        staffdata();
-                        Intent intent = new Intent(signup.this,sirs.class);
-                        startActivity(intent);
-                    }
+
                 }
+
             });
 
+
+
     }
+
 
 
     public void staffdata(){
@@ -84,6 +142,17 @@ public class signup extends AppCompatActivity {
         ref.child("password").setValue(model.getPassword());
         ref.child("username").setValue(model.getUsername());
 
+    }
 
+    public boolean isInternetAvailable() {
+
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        return isConnected;
     }
 }

@@ -1,6 +1,7 @@
 package com.sepsis.sepsis;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Button signup, login;
+    SessionManager session;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,15 @@ public class MainActivity extends AppCompatActivity {
 
         signup = findViewById(R.id.welcome_signup);
         login = findViewById(R.id.welcome_login);
+
+        session = new SessionManager(getApplicationContext());
+
+        if(session.isLoggedIn())
+        {
+            Intent i = new Intent(MainActivity.this, dashboard.class);
+            startActivity(i);
+            finish();
+        }
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override

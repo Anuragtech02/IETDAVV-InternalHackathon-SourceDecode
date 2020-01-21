@@ -30,7 +30,7 @@ public class login extends AppCompatActivity {
 
         username= findViewById(R.id.editText_uname);
         password=  findViewById(R.id.editText_pass);
-        button= (Button) findViewById(R.id.login_login);
+        button= findViewById(R.id.login_login);
 
         reference= FirebaseDatabase.getInstance().getReference("staff").child("details");
 
@@ -47,6 +47,7 @@ public class login extends AppCompatActivity {
 
                                 if (username.equals(fusername)){
                                     if (password.equals(fpassword)){
+
                                         Toast.makeText(login.this, "Logged in", Toast.LENGTH_SHORT).show();
                                     }else{
                                         Toast.makeText(login.this, "Incorrect password", Toast.LENGTH_SHORT).show();
