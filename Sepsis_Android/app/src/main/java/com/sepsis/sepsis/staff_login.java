@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -35,9 +36,17 @@ public class staff_login extends AppCompatActivity {
     ProgressBar progressBar;
     SessionManager session;
 
+
+    private long backPressedTime;
+    private Toast backToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.pinkAccent));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.grey_font));
+        }
         setContentView(R.layout.login);
 
         username= (EditText) findViewById(R.id.editText_uname);
@@ -62,8 +71,8 @@ public class staff_login extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()){
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    String fusername= dataSnapshot.child("username").getValue().toString();
-                                    String fpassword=dataSnapshot.child("password").getValue().toString();
+                                    String fusername= snapshot.child("username").getValue().toString();
+                                    String fpassword=snapshot.child("password").getValue().toString();
 
                                     if (username.getText().toString().equals(fusername)){
                                         if (password.getText().toString().equals(fpassword)){
@@ -87,8 +96,6 @@ public class staff_login extends AppCompatActivity {
                                         Toast.makeText(staff_login.this, "Incorrect username", Toast.LENGTH_SHORT).show();
                                     }
 
-
-
                                 }
                             }
                         }
@@ -108,8 +115,25 @@ public class staff_login extends AppCompatActivity {
 
         });
 
+    }
 
+    @Override
+    public void onBackPressed() {
 
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            backToast.cancel();
+            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            backToast = Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT);
+            backToast.show();
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+
+        backPressedTime = System.currentTimeMillis();
     }
 
     public void signup(View view)

@@ -1,6 +1,6 @@
 package com.sepsis.sepsis.model;
 
-public class staff_reis_model {
+public class staff_regis_model {
     private String mname;
 
     public String getMname() {
@@ -35,14 +35,14 @@ public class staff_reis_model {
         this.password = password;
     }
 
-    public staff_reis_model(String mname, String mempno, String username, String password) {
+    public staff_regis_model(String mname, String mempno, String username, String password) {
         this.mname = mname;
         this.mempno = mempno;
         this.username = username;
         this.password = password;
     }
 
-    public staff_reis_model() {
+    public staff_regis_model() {
     }
 
     private String mempno;

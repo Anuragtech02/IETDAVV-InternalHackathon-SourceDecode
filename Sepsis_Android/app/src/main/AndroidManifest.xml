@@ -20,7 +20,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".signup"></activity>
         <activity android:name=".HeartRate"></activity>
+        <activity android:name="prescription_new"></activity>
         <activity android:name=".sofa"></activity>
+        <activity android:name=".about"></activity>
         <activity android:name=".patient_registration"></activity>
         <activity android:name=".welcome"></activity>
         <activity android:name=".quickCheckup"></activity>
@@ -30,7 +32,6 @@
         <activity android:name=".prescription"></activity>
         <activity android:name=".dashboard"></activity>
         <activity android:name=".patient_login"></activity>
-        <activity android:name=".patient_regis" />
         <activity android:name=".staff_login" />
         <activity android:name=".MainActivity">
             <intent-filter>

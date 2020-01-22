@@ -24,12 +24,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="150dp"
         android:background="@drawable/button_round"
-        android:clickable="false"
+        android:clickable="true"
         android:fontFamily="@font/montserrat_bold"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2">
+        app:layout_constraintTop_toBottomOf="@+id/about">
 
         <Button
             android:id="@+id/welcome_signup"

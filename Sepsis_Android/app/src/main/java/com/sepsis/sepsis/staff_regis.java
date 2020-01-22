@@ -9,13 +9,13 @@ import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.sepsis.sepsis.model.staff_reis_model;
+import com.sepsis.sepsis.model.staff_regis_model;
 
 public class staff_regis extends AppCompatActivity {
     EditText name , password, username, empno,cnfpass;
     Button btn;
     DatabaseReference ref;
-    staff_reis_model model;
+    staff_regis_model model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class staff_regis extends AppCompatActivity {
         cnfpass= (EditText)findViewById(R.id.editText5);
         btn=(Button)findViewById(R.id.button2);
 
-        model= new staff_reis_model();
+        model= new staff_regis_model();
 
         if (cnfpass.getText().toString().equals(password.getText().toString())){
             btn.setOnClickListener(new View.OnClickListener() {

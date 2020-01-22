@@ -1,6 +1,6 @@
 package com.sepsis.sepsis.model;
 
-public class patient_model {
+public class patientReg_model {
     private String mname, musermae,mage, mgender;
 
     public String getMname() {
@@ -35,13 +35,13 @@ public class patient_model {
         this.mgender = mgender;
     }
 
-    public patient_model(String mname, String musermae, String mage, String mgender) {
+    public patientReg_model(String mname, String musermae, String mage, String mgender) {
         this.mname = mname;
         this.musermae = musermae;
         this.mage = mage;
         this.mgender = mgender;
     }
 
-    public patient_model() {
+    public patientReg_model() {
     }
 }

@@ -12,7 +12,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
 
-    private Button signup, login;
+    private Button signup, login, about;
     SessionManager session;
     private String username;
 
@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         signup = findViewById(R.id.welcome_signup);
         login = findViewById(R.id.welcome_login);
+        about=findViewById(R.id.about);
 
         session = new SessionManager(getApplicationContext());
 
@@ -55,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent activity = new Intent(MainActivity.this, staff_login.class);
                 startActivity(activity);
+            }
+        });
+        about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, about.class);
+                startActivity(i);
             }
         });
 

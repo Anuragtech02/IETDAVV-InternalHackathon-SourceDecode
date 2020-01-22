@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,18 +16,22 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.sepsis.sepsis.model.staff_reis_model;
+import com.google.firebase.database.ValueEventListener;
+import com.sepsis.sepsis.model.staff_regis_model;
 
 public class signup extends AppCompatActivity {
 
 
     EditText name , password, username, empno,cnfpass;
     Button btn;
+    int flag =0;
     DatabaseReference ref;
     SessionManager session;
-    staff_reis_model model;
+    staff_regis_model model;
     ProgressBar progressBar;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
@@ -53,7 +58,7 @@ public class signup extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar1);
         progressBar.setVisibility(View.GONE);
 
-        model= new staff_reis_model();
+        model= new staff_regis_model();
 
 
             btn.setOnClickListener(new View.OnClickListener() {
@@ -81,53 +86,46 @@ public class signup extends AppCompatActivity {
 
                             String email = username.getText().toString().trim();
                             if(email.matches(emailPattern)){
-
                                 if(cnfpass.getText().toString().equals(password.getText().toString())){
-                                    if(password.getText().toString().length()>=8){
-                                        progressBar.setVisibility(View.VISIBLE);
-                                        staffdata();
-                                        Handler handler = new Handler();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Intent i = new Intent(signup.this, dashboard.class);
-                                               // i.putExtra("message", username.getText().toString());
-                                                startActivity(i);
-                                                session.createLoginSession("SIH", username.getText().toString());
-                                                finish();
-                                            }
-                                        }, 2000);
+                                       if(password.getText().toString().length()>=8){
+                                           progressBar.setVisibility(View.VISIBLE);
+                                           staffdata();
+                                           Handler handler = new Handler();
+                                           handler.postDelayed(new Runnable() {
+                                               @Override
+                                               public void run() {
+                                                   Intent i = new Intent(signup.this, dashboard.class);
+                                                   // i.putExtra("message", username.getText().toString());
+                                                   startActivity(i);
+                                                   session.createLoginSession("SIH", username.getText().toString());
+                                                   finish();
+                                               }
+                                           }, 2000);
+                                       }
+                                       else{
+                                           password.setError("Password must be at least 8 characters long !");
+                                       }
                                     }
-                                    else{
-                                        password.setError("Password must be at least 8 characters long !");
-                                    }
-
-                                }
-                                else{
-                                    if(cnfpass.getText().toString().isEmpty()){
-                                        cnfpass.setError("Please enter password again !");
-                                    }
-                                    else if(!(cnfpass.getText().toString().equals(password.getText().toString()))){
-                                        cnfpass.setError("Passwords do not match :(");
-                                    }
-                                }
-                            }else{
-                                username.setError("This doesn't look like a valid email address :(");
-                            }
-
+                                   else{
+                                       if(cnfpass.getText().toString().isEmpty()){
+                                           cnfpass.setError("Please enter password again !");
+                                       }
+                                       else if(!(cnfpass.getText().toString().equals(password.getText().toString()))){
+                                           cnfpass.setError("Passwords do not match :(");
+                                       }
+                                   }
+                               }
+                               else{
+                                   Toast.makeText(signup.this, "Username already exists !!", Toast.LENGTH_SHORT).show();
+                               }
                         }
-                    }else{
-                        Toast.makeText(signup.this, "No Internet Connection :(", Toast.LENGTH_SHORT).show();
-                    }
-
+                   }else{
+                       Toast.makeText(signup.this, "No Internet Connection :(", Toast.LENGTH_SHORT).show();
+                   }
                 }
-
             });
 
-
-
     }
-
 
 
     public void staffdata(){
