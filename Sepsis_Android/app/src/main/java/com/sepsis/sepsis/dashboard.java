@@ -95,7 +95,7 @@ public class dashboard extends AppCompatActivity {
             public void onClick(View view) {
                 AlertDialog.Builder builder=new AlertDialog.Builder(dashboard.this); //Home is name of the activity
                 builder.setMessage("Do you want to logout ?");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         session.logoutUser();
@@ -103,7 +103,7 @@ public class dashboard extends AppCompatActivity {
                     }
                 });
 
-                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();

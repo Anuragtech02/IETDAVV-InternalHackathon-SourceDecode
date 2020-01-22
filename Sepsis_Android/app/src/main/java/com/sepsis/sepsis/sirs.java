@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,8 @@ public class sirs extends AppCompatActivity {
     private sirs_class sirsClass;
     private float map1;
     Interpreter interpreter;
+    ProgressBar progressBar;
+
 
     Float[] mean={(float)63.016672, (float)18.500810,(float)119.280812, (float)78.02193,(float)84.578042,(float)57.581449,(float)98.615987};
     Float[] std= {(float)16.130546,(float)5.186035,(float)20.183439,(float)14.392553,(float)16.325395,(float)9.384823,(float)0.816691};
@@ -52,6 +56,10 @@ public class sirs extends AppCompatActivity {
         dia_bp=(EditText)findViewById((R.id.diabp_id));
         body_t=(EditText)findViewById((R.id.bt_id));
         textView=(TextView)findViewById(R.id.textView) ;
+
+        progressBar = findViewById(R.id.progressBar1);
+        progressBar.setVisibility(View.GONE);
+
         reference=FirebaseDatabase.getInstance().getReference("SIRS").child("name");
 
 
@@ -92,44 +100,60 @@ public class sirs extends AppCompatActivity {
                     dia_bp.setError("Dia BP can't be empty");
                 }
                 else{
-                    
-                    float[][] floats= new float[1][8];
-                    String sage=age.getText().toString();
-                    String sresprate=age.getText().toString();
-                    String ssysbp=age.getText().toString();
-                    String shr=age.getText().toString();
-                    String sdiabp=age.getText().toString();
-                    String sbody_temp=age.getText().toString();
-                    savedata();
-                    floats[0][0]=(Float.parseFloat(age.getText().toString())-mean[0]/std[0]);
-                    floats[0][1]=(Float.parseFloat(resp_rate.getText().toString())-mean[1]/std[1]);
-                    floats[0][2]=(Float.parseFloat(sysbp.getText().toString())-mean[2]/std[2]);
-                    floats[0][3]=(Float.parseFloat(String.valueOf((2* Float.parseFloat(dia_bp.getText().toString())+ Float.parseFloat(sysbp.getText().toString())/3)-mean[3]/std[3])));
-                    floats[0][4]=(Float.parseFloat(hr.getText().toString())-mean[4]/std[4]);
-                    floats[0][5]=(Float.parseFloat(dia_bp.getText().toString())-mean[5]/std[5]);
-                    floats[0][6]=(Float.parseFloat(body_t.getText().toString())-mean[6]/std[6]);
-                    float res= doinference(floats);
-                    if (res>0.050 ){
-                        textView.setText("Patient MAY HAVE Sepsis 1");
-                        textView.setTextColor(Color.RED);
-                    }else if (Float.parseFloat(resp_rate.getText().toString())>20 &&Float.parseFloat(sysbp.getText().toString())<90 && Float.parseFloat(hr.getText().toString())>90&& Float.parseFloat(resp_rate.getText().toString())>100 || Float.parseFloat(body_t.getText().toString())<96){
-                        textView.setText("Patient MAY HAVE Sepsis");
-                        textView.setTextColor(Color.RED);
 
-                    }else {
-                        textView.setText("Patient DOES NOT have Sepsis");
-                        textView.setTextColor(Color.rgb(4,122,25));
+                    if((Integer.parseInt(age.getText().toString())) < 0 || (Integer.parseInt(age.getText().toString())>150)){
+                        age.setError("This doesn't seem to be a valid age :(");
                     }
+                    if((Integer.parseInt(resp_rate.getText().toString())) < 8 || (Integer.parseInt(resp_rate.getText().toString())>32)){
+                        resp_rate.setError("Not a valid respiration rate !");
+                    }
+                    if((Integer.parseInt(sysbp.getText().toString())) < 60 || (Integer.parseInt(sysbp.getText().toString())>300)){
+                        sysbp.setError("Invalid value !!");
+                    }
+                    if((Integer.parseInt(dia_bp.getText().toString())) < 40 || (Integer.parseInt(dia_bp.getText().toString())>180)){
+                        dia_bp.setError("Invalid Value !!");
+                    }
+                    if((Integer.parseInt(hr.getText().toString())) < 40 || ((Integer.parseInt(hr.getText().toString()) > (220 - Integer.parseInt(age.getText().toString())) )  )  ){
+                        hr.setError("Invalid Heart Rate value !!");
+                    }
+                    if((Integer.parseInt(body_t.getText().toString())) < 86 || (Integer.parseInt(body_t.getText().toString())>120)){
+                        body_t.setError("Invalid body temperature !!");
+                    }
+                    else{
+                        progressBar.setVisibility(View.VISIBLE);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                float[][] floats= new float[1][8];
+                                savedata();
+                                floats[0][0]=(Float.parseFloat(age.getText().toString())-mean[0]/std[0]);
+                                floats[0][1]=(Float.parseFloat(resp_rate.getText().toString())-mean[1]/std[1]);
+                                floats[0][2]=(Float.parseFloat(sysbp.getText().toString())-mean[2]/std[2]);
+                                floats[0][3]=(Float.parseFloat(String.valueOf((2* Float.parseFloat(dia_bp.getText().toString())+ Float.parseFloat(sysbp.getText().toString())/3)-mean[3]/std[3])));
+                                floats[0][4]=(Float.parseFloat(hr.getText().toString())-mean[4]/std[4]);
+                                floats[0][5]=(Float.parseFloat(dia_bp.getText().toString())-mean[5]/std[5]);
+                                floats[0][6]=(Float.parseFloat(body_t.getText().toString())-mean[6]/std[6]);
+                                float res= doinference(floats);
+                                if (res>0.050 ){
+                                    progressBar.setVisibility(View.GONE);
+                                    textView.setText("Patient MAY HAVE Sepsis");
+                                    textView.setTextColor(Color.RED);
+                                }else if (Float.parseFloat(resp_rate.getText().toString())>20 &&Float.parseFloat(sysbp.getText().toString())<90 && Float.parseFloat(hr.getText().toString())>90&& Float.parseFloat(resp_rate.getText().toString())>100 || Float.parseFloat(body_t.getText().toString())<96){
+                                    progressBar.setVisibility(View.GONE);
+                                    textView.setText("Patient MAY HAVE Sepsis");
+                                    textView.setTextColor(Color.RED);
+
+                                }else {
+                                    textView.setText("Patient DOES NOT have Sepsis");
+                                    textView.setTextColor(Color.rgb(4,122,25));
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        }, 1500);
+                    }
+
                 }
-
-               /* if (Integer.parseInt(age.getText().toString())>107 || Integer.parseInt(age.getText().toString())<0 || Integer.parseInt(resp_rate.getText().toString())>40 ||
-                        Integer.parseInt(resp_rate.getText().toString())< 10 || Integer.parseInt(hr.getText().toString())> 120 ||
-                        Integer.parseInt(hr.getText().toString())<40 || Integer.parseInt(sysbp.getText().toString())<60 ||
-                        Integer.parseInt(sysbp.getText().toString())<100 || Integer.parseInt(dia_bp.getText().toString())> 150
-
-                ){
-
-                }*/
 
             }
         });
